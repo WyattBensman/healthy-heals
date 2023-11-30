@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
-const upload = require("../middleware/uploadMiddleware");
-const { handleDishImage } = require("../middleware/dishMiddleware");
+const upload = require("../utils/uploadMiddleware");
+const { handleDishImage } = require("../utils/dishMiddleware");
 
 const dishSchema = new Schema({
   title: {

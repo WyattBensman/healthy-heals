@@ -14,13 +14,13 @@ type Dish {
     title: String
     description: String
     image: String
-    cookTime: Number
+    cookTime: Int
     category: String
     ingredients: [String]
     instructions: [String]
     author: User
-    createdAt: Date
-    likeCount: Number
+    createdAt: String
+    likeCount: Int
 }
 
 type Auth {
@@ -38,8 +38,8 @@ type Mutation {
     login(email: String!, password: String!): Auth
     createUser(fName: String!, lName: String!, email: String!, password: String!): Auth
     updateUser(fName: String, lName: String, email: String, password: String): User
-    createDish(title: String!, description: String!, image: String, cookTime: Number!, category: String!, ingredients: [String]!, instructions: [String]!): Dish
-    updateDish(dishId: ID!, title: String, description: String, image: String, cookTime: Number, category: String, ingredients: [String], instructions: [String]): Dish
+    createDish(title: String!, description: String!, image: String, cookTime: Int!, category: String!, ingredients: [String]!, instructions: [String]!): Dish
+    updateDish(dishId: ID!, title: String, description: String, image: String, cookTime: Int, category: String, ingredients: [String], instructions: [String]): Dish
     deleteDish(dishId: ID!): User
     saveDish(dishId: ID!): User
     unsaveDish(dishId: ID!): User
