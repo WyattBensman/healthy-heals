@@ -1,5 +1,5 @@
 const { User, Dish } = require("../models");
-const { signToken, AuthenticationError } = require("../utils/auth.js");
+const { signToken, AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
   Query: {
@@ -69,6 +69,7 @@ const resolvers = {
         return { newUser, token };
       } catch (error) {
         console.error(`Error: ${error.message}`);
+        throw new Error("An error occurred during user creation.");
       }
     },
     updateUser: async (_, { fName, lName, email, password }, req) => {
@@ -255,3 +256,5 @@ const resolvers = {
     },
   },
 };
+
+module.exports = resolvers;
