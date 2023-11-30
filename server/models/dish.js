@@ -11,6 +11,7 @@ const dishSchema = new Schema({
   },
   description: {
     type: String,
+    required: true,
     trim: true,
     maxlength: 300,
   },
@@ -25,11 +26,22 @@ const dishSchema = new Schema({
   },
   category: {
     type: String,
+    required: true,
     enum: ["Breakfast", "Lunch", "Dinner", "Snacks", "Dessert"],
     trim: true,
   },
-  ingredients: [{ type: String }],
-  instructions: [{ type: String }],
+  ingredients: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
+  instructions: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   author: {
     type: Schema.Types.ObjectId,
     ref: "User",
