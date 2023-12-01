@@ -62,11 +62,11 @@ const resolvers = {
     },
     createUser: async (_, { fName, lName, email, password }) => {
       try {
-        const newUser = await User.create({ fName, lName, email, password });
+        const user = await User.create({ fName, lName, email, password });
 
-        const token = signToken(newUser);
+        const token = signToken(user);
 
-        return { newUser, token };
+        return { token, user };
       } catch (error) {
         console.error(`Error: ${error.message}`);
         throw new Error("An error occurred during user creation.");
@@ -118,7 +118,7 @@ const resolvers = {
       }
 
       try {
-        const newDish = await Dish.create({
+        const dish = await Dish.create({
           title,
           description,
           image,
@@ -126,17 +126,18 @@ const resolvers = {
           category,
           ingredients,
           instructions,
+          author: req.user._id,
         });
 
         await User.findByIdAndUpdate(
           req.user._id,
           {
-            $addToSet: { createdDishes: newDish },
+            $addToSet: { createdDishes: dish },
           },
           { new: true }
         );
 
-        return newDish;
+        return dish;
       } catch (error) {
         console.error(`Error: ${error.message}`);
       }

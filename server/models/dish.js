@@ -57,7 +57,7 @@ const dishSchema = new Schema({
 });
 
 // Middleware to handle file uploads before saving to the database
-dishSchema.pre("save", upload.single("image"), handleDishImage);
+/* dishSchema.pre("save", upload.single("image"), handleDishImage); */
 
 const Dish = model("Dish", dishSchema);
 
