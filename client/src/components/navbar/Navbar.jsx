@@ -18,7 +18,7 @@ export default function Navbar() {
         {/* Brand Logo */}
         <Link to="/">
           {/* <img className="w-36" src="/images/branding/official-logo.png" /> */}
-          <h1 className="text-2xl italic text-[#48b4a0] font-semibold">
+          <h1 className="text-3xl italic text-[#48b4a0] font-bold">
             Healthy Heals
           </h1>
         </Link>

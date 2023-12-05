@@ -9,8 +9,8 @@ export default function DefaultCard() {
       <div className="relative">
         <img
           src="/images/dinner.jpg"
-          className={`w-full border cursor-pointer duration-200 ${
-            cardHover && "opacity-90"
+          className={`w-full border cursor-pointer duration-300 ${
+            cardHover && "filter brightness-50"
           }`}
           onMouseOver={() => setCardHover(true)}
           onMouseLeave={() => setCardHover(false)}

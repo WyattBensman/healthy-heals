@@ -3,7 +3,7 @@ import DefaultCard from "../components/cards/defaultCard";
 export default function Home() {
   return (
     <>
-      <div className="flex justify-between items-center mt-12 mb-4">
+      <div className="flex md:flex-row flex-col justify-between items-center mt-12 mb-4">
         <h1 className="text-2xl font-semibold text-[#182d27]">
           Explore some of our most popular dishes!
         </h1>

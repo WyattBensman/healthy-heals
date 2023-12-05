@@ -30,6 +30,28 @@ const routes = [
       {
         path: "/explore",
         element: <Explore />,
+        children: [
+          {
+            path: "breakfast",
+            element: <Home />,
+          },
+          {
+            path: "lunch",
+            element: <Home />,
+          },
+          {
+            path: "dinner",
+            element: <Home />,
+          },
+          {
+            path: "dessert",
+            element: <Home />,
+          },
+          {
+            path: "snacks",
+            element: <Home />,
+          },
+        ],
       },
       {
         path: "/profile",
