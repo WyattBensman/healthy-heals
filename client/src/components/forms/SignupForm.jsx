@@ -1,14 +1,42 @@
+import { useMutation } from "@apollo/client";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CREATE_USER } from "../../utils/mutations";
+import Auth from "../../utils/auth";
 
 export default function SignUpForm() {
-  const [fName, setFName] = useState("");
-  const [lName, setLName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    fName: "",
+    lName: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
+  const [createUser] = useMutation(CREATE_USER);
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await createUser({
+        variables: { ...formData },
+      });
+
+      Auth.login(data.createUser.token);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <form className="md:w-2/5 w-3/4">
+    <form className="md:w-2/5 w-3/4" onSubmit={handleSubmit}>
       <h1 className="text-4xl font-medium mb-2">Sign Up</h1>
       <h2 className="mb-10 italic text-sm">
         Take the First Step Towards a Healthier You!
@@ -24,8 +52,8 @@ export default function SignUpForm() {
               First Name
             </label>
             <input
-              value={fName}
-              onChange={(e) => setFName(e.target.value)}
+              value={formData.fName}
+              onChange={handleInputChange}
               type="text"
               id="fName"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -40,10 +68,10 @@ export default function SignUpForm() {
               Last Name
             </label>
             <input
-              value={lName}
-              onChange={(e) => setLName(e.target.value)}
+              value={formData.lName}
+              onChange={handleInputChange}
               type="text"
-              id="fName"
+              id="lName"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               required
             />
@@ -59,8 +87,8 @@ export default function SignUpForm() {
           Username
         </label>
         <input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={formData.username}
+          onChange={handleInputChange}
           type="text"
           id="username"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -76,8 +104,8 @@ export default function SignUpForm() {
           Email
         </label>
         <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData.email}
+          onChange={handleInputChange}
           type="email"
           id="email"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -93,8 +121,8 @@ export default function SignUpForm() {
           Password
         </label>
         <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formData.password}
+          onChange={handleInputChange}
           type="password"
           id="password"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
