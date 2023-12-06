@@ -1,19 +1,18 @@
-import { useMutation } from "@apollo/client";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../../utils/mutations";
 import Auth from "../../utils/auth";
 
 export default function SignUpForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fName: "",
     lName: "",
-    username: "",
     email: "",
     password: "",
   });
 
-  const navigate = useNavigate();
   const [createUser] = useMutation(CREATE_USER);
 
   const handleInputChange = (e) => {
@@ -36,10 +35,13 @@ export default function SignUpForm() {
   };
 
   return (
-    <form className="md:w-2/5 w-3/4" onSubmit={handleSubmit}>
+    <form
+      className="md:w-2/5 w-3/4 border rounded px-12 py-16"
+      onSubmit={handleSubmit}
+    >
       <h1 className="text-4xl font-medium mb-2">Sign Up</h1>
       <h2 className="mb-10 italic text-sm">
-        Take the First Step Towards a Healthier You!
+        Take the first step in becoming a more organized individual!
       </h2>
       <div className="mb-4">
         {/* First & Last Name */}
@@ -52,11 +54,12 @@ export default function SignUpForm() {
               First Name
             </label>
             <input
-              value={formData.fName}
-              onChange={handleInputChange}
               type="text"
               id="fName"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              name="fName"
+              value={formData.fName}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -68,6 +71,7 @@ export default function SignUpForm() {
               Last Name
             </label>
             <input
+              name="lName"
               value={formData.lName}
               onChange={handleInputChange}
               type="text"
@@ -78,23 +82,6 @@ export default function SignUpForm() {
           </div>
         </div>
       </div>
-      {/* Username */}
-      <div className="mb-4">
-        <label
-          htmlFor="username"
-          className="block mb-2 text-sm font-medium text-gray-900"
-        >
-          Username
-        </label>
-        <input
-          value={formData.username}
-          onChange={handleInputChange}
-          type="text"
-          id="username"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          required
-        />
-      </div>
       {/* Email */}
       <div className="mb-4">
         <label
@@ -104,6 +91,7 @@ export default function SignUpForm() {
           Email
         </label>
         <input
+          name="email"
           value={formData.email}
           onChange={handleInputChange}
           type="email"
@@ -121,6 +109,7 @@ export default function SignUpForm() {
           Password
         </label>
         <input
+          name="password"
           value={formData.password}
           onChange={handleInputChange}
           type="password"
@@ -136,6 +125,15 @@ export default function SignUpForm() {
       >
         Sign Up
       </button>
+      <div className="flex flex-col justify-center text-xs italic text-center">
+        <Link to="/signup" className="hover:text-gray-700 duration-200">
+          Already a Member? Login!
+        </Link>
+        <p className="my-1">or</p>
+        <Link to="/" className="hover:text-gray-700 duration-200">
+          explore without logging in
+        </Link>
+      </div>
     </form>
   );
 }

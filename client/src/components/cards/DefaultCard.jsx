@@ -6,7 +6,7 @@ export default function DefaultCard() {
   const [cardHover, setCardHover] = useState(false);
 
   const currentUser = AuthService.getProfile();
-  const isCurrentUserAuthor = currentUser && currentUser.id === card.authorId;
+  /*  const isCurrentUserAuthor = currentUser && currentUser.id === card.authorId; */
 
   return (
     <div className="mb-2">
@@ -36,16 +36,15 @@ export default function DefaultCard() {
         >
           <h3 className="font-medium">Honey Smoked Atlantic Salmon</h3>
         </Link>
-        {isCurrentUserAuthor && currentUser && (
+        {/* {isCurrentUserAuthor && currentUser && (
           <div className="relative group">
             <i className="fa-regular fa-pen-to-square text-xl text-gray-400 cursor-pointer" />
             <div className="hidden group-hover:block absolute right-0 mt-2 bg-white border p-2 rounded">
-              {/* Dropdown content */}
               <button>Edit</button>
               <button>Delete</button>
             </div>
           </div>
-        )}
+        )} */}
         <i className="fa-regular fa-heart text-xl text-red-400"></i>
       </div>
       <p className="text-sm italic">18 Minute Cook Time</p>

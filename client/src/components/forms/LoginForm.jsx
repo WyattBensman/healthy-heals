@@ -1,13 +1,13 @@
-import { useMutation } from "@apollo/client";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMutation } from "@apollo/client";
 import { LOGIN } from "../../utils/mutations";
 import Auth from "../../utils/auth";
 
 export function LoginForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
 
-  const navigate = useNavigate();
   const [login] = useMutation(LOGIN);
 
   const handleInputChange = (e) => {
@@ -30,37 +30,42 @@ export function LoginForm() {
   };
 
   return (
-    <form className="md:w-2/5 w-3/4" onSubmit={handleSubmit}>
+    <form
+      className="md:w-2/5 w-3/4 border rounded px-12 py-16"
+      onSubmit={handleSubmit}
+    >
       <h1 className="text-4xl font-medium mb-2">Login</h1>
-      <h2 class="mb-10 italic text-sm">
-        Launch Your Body's Path to Wellness with Smart Choices!
+      <h2 className="mb-10 italic text-sm">
+        Efficiently track & share some of your favorite dishes!
       </h2>
       {/* Email */}
       <div className="mb-4">
         <label
-          for="email"
+          htmlFor="email"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
           Your email
         </label>
         <input
+          name="email"
           value={formData.email}
           onChange={handleInputChange}
           type="email"
           id="email"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           required
         />
       </div>
       {/* Password */}
       <div className="mb-4">
         <label
-          for="password"
+          htmlFor="password"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
           Your password
         </label>
         <input
+          name="password"
           value={formData.password}
           onChange={handleInputChange}
           type="password"
@@ -75,6 +80,15 @@ export function LoginForm() {
       >
         Login
       </button>
+      <div className="flex flex-col justify-center text-xs italic text-center">
+        <Link to="/signup" className="hover:text-gray-700 duration-200">
+          Not a Member? Sign up today!
+        </Link>
+        <p className="my-1">or</p>
+        <Link to="/" className="hover:text-gray-700 duration-200">
+          explore without logging in
+        </Link>
+      </div>
     </form>
   );
 }

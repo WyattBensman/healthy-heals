@@ -15,12 +15,6 @@ export default function Home() {
       </div>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
         <DefaultCard />
-        <DefaultCard />
-        <DefaultCard />
-        <DefaultCard />
-        <DefaultCard />
-        <DefaultCard />
-        <DefaultCard />
       </div>
     </>
   );
