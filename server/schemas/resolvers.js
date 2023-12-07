@@ -38,7 +38,7 @@ const resolvers = {
   Mutation: {
     login: async (_, { email, password }) => {
       try {
-        const user = await User.findOne(email)
+        const user = await User.findOne({ email })
           .populate("createdDishes")
           .populate("savedDishes");
 

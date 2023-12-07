@@ -126,7 +126,7 @@ export default function SignUpForm() {
         Sign Up
       </button>
       <div className="flex flex-col justify-center text-xs italic text-center">
-        <Link to="/signup" className="hover:text-gray-700 duration-200">
+        <Link to="/login" className="hover:text-gray-700 duration-200">
           Already a Member? Login!
         </Link>
         <p className="my-1">or</p>

@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import AuthService from "../../utils/auth";
 
 export default function ProfileNavDropdown() {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+
+  const handleLogout = () => {
+    AuthService.logout();
+  };
 
   return (
     <div
@@ -11,7 +16,7 @@ export default function ProfileNavDropdown() {
       className="relative"
     >
       <button
-        className="text-[#182d27] bg-[#48b4a0] font-medium focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="text-[#182d27] bg-[#48b4a0] font-medium focus:ring-4 focus:outline-none focus:ring-[#48b4a0] rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
         type="button"
       >
         Profile{" "}
@@ -52,12 +57,12 @@ export default function ProfileNavDropdown() {
               </NavLink>
             </li>
             <li>
-              <a
-                href="#"
-                className="block px-4 py-2 text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+              <div
+                onClick={handleLogout}
+                className="block cursor-pointer px-4 py-2 hover:text-red-600 ease-in-out duration-100"
               >
                 Sign out
-              </a>
+              </div>
             </li>
           </ul>
         </div>
