@@ -1,89 +1,135 @@
+import { useMutation } from "@apollo/client";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CREATE_DISH } from "../../utils/mutations";
 
 export function CreateDishForm() {
-  const [dishName, setDishName] = useState("");
-  const [img, setImg] = useState("");
-  const [description, setDescription] = useState("");
-  const [ingredients, setIngredients] = useState([{ id: 1, value: "" }]);
-  const [instructions, setInstructions] = useState([{ id: 1, value: "" }]);
-  const [cookTime, setCookTime] = useState("");
-  const [category, setCategory] = useState("");
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    title: "",
+    image: null,
+    description: "",
+    ingredients: [{ id: 1, value: "" }],
+    instructions: [{ id: 1, value: "" }],
+    cookTime: "",
+    category: "",
+  });
+
+  const [createDish] = useMutation(CREATE_DISH);
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, image: e.target.files[0] });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await createDish({
+        variables: {
+          ...formData,
+          ingredients: formData.ingredients.map(
+            (ingredient) => ingredient.value
+          ),
+          instructions: formData.instructions.map(
+            (instruction) => instruction.value
+          ),
+        },
+      });
+
+      const createdDishId = data.createDish._id;
+      navigate(`/${createdDishId}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleIngredientChange = (id, value) => {
-    const updatedIngredients = ingredients.map((ingredient) =>
+    const updatedIngredients = formData.ingredients.map((ingredient) =>
       ingredient.id === id ? { ...ingredient, value } : ingredient
     );
-    setIngredients(updatedIngredients);
+    setFormData({ ...formData, ingredients: updatedIngredients });
   };
 
   const handleInstructionChange = (id, value) => {
-    const updatedInstructions = instructions.map((instruction) =>
+    const updatedInstructions = formData.instructions.map((instruction) =>
       instruction.id === id ? { ...instruction, value } : instruction
     );
-    setInstructions(updatedInstructions);
+    setFormData({ ...formData, instructions: updatedInstructions });
   };
 
   const addIngredient = () => {
-    const newIngredient = { id: ingredients.length + 1, value: "" };
-    setIngredients([...ingredients, newIngredient]);
+    const newIngredient = { id: formData.ingredients.length + 1, value: "" };
+    setFormData({
+      ...formData,
+      ingredients: [...formData.ingredients, newIngredient],
+    });
   };
 
   const removeIngredient = (id) => {
-    const updatedIngredients = ingredients.filter(
+    const updatedIngredients = formData.ingredients.filter(
       (ingredient) => ingredient.id !== id
     );
-    setIngredients(updatedIngredients);
+    setFormData({ ...formData, ingredients: updatedIngredients });
   };
 
   const addInstruction = () => {
-    const newInstruction = { id: instructions.length + 1, value: "" };
-    setInstructions([...instructions, newInstruction]);
+    const newInstruction = { id: formData.instructions.length + 1, value: "" };
+    setFormData({
+      ...formData,
+      instructions: [...formData.instructions, newInstruction],
+    });
   };
 
   const removeInstruction = (id) => {
-    const updatedInstructions = instructions.filter(
+    const updatedInstructions = formData.instructions.filter(
       (instruction) => instruction.id !== id
     );
-    setInstructions(updatedInstructions);
+    setFormData({ ...formData, instructions: updatedInstructions });
   };
 
   return (
-    <form className="md:w-2/5 w-3/4">
+    <form className="md:w-2/5 w-3/4" onSubmit={handleSubmit}>
       <h1 className="text-4xl font-medium mb-2">Create Dish</h1>
       <h2 className="mb-5 italic text-sm">What's cookin' good lookin'?</h2>
       <div className="mb-4">
-        {/* Dish Name*/}
+        {/* Title*/}
         <div className="flex space-x-3 md:space-x-8 mb-4">
           <div className="w-1/2">
             <label
-              htmlFor="dishName"
+              htmlFor="title"
               className="block mb-2 text-sm font-medium text-gray-900"
             >
               Dish Name
             </label>
             <input
-              value={dishName}
-              onChange={(e) => setDishName(e.target.value)}
               type="text"
-              id="dishName"
+              id="title"
+              name="title"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              value={formData.title}
+              onChange={handleInputChange}
               required
             />
           </div>
           {/* Image */}
           <div className="w-1/2">
             <label
-              htmlFor="lName"
+              htmlFor="image"
               className="block mb-2 text-sm font-medium text-gray-900"
             >
               Image
             </label>
             <input
-              value={img}
-              onChange={(e) => setImg(e.target.value)}
-              type="text"
-              id="fName"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              onChange={handleFileChange}
+              name="image"
+              type="file"
+              id="image"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
             />
           </div>
         </div>
@@ -97,8 +143,9 @@ export function CreateDishForm() {
           Short Description
         </label>
         <input
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={formData.description}
+          onChange={handleInputChange}
+          name="description"
           type="text"
           id="description"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -106,14 +153,14 @@ export function CreateDishForm() {
         />
       </div>
       {/* Ingredients */}
-      <div className="mb-4">
+      <div className="mb-2">
         <label
           htmlFor="ingredient"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
           Ingredients
         </label>
-        {ingredients.map((ingredient, index) => (
+        {formData.ingredients.map((ingredient, index) => (
           <div key={ingredient.id} className="relative mb-2">
             <input
               value={ingredient.value}
@@ -142,15 +189,16 @@ export function CreateDishForm() {
           </button>
         </div>
       </div>
+
       {/* Instructions */}
-      <div className="mb-4">
+      <div className="mb-2">
         <label
           htmlFor="instruction"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
           Instructions
         </label>
-        {instructions.map((instruction, index) => (
+        {formData.instructions.map((instruction, index) => (
           <div key={instruction.id} className="relative mb-2">
             <input
               value={instruction.value}
@@ -190,15 +238,16 @@ export function CreateDishForm() {
           </label>
           <div className="flex">
             <input
-              value={cookTime}
-              onChange={(e) => setCookTime(e.target.value)}
-              type="text"
+              value={formData.cookTime}
+              onChange={handleInputChange}
+              type="number"
+              name="cookTime"
               id="cookTime"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-32 p-2.5"
               required
             />
             <p className="ml-2 flex items-center">
-              <i>in minutes</i>
+              <span className="italic">in minutes</span>
             </p>
           </div>
         </div>
@@ -210,10 +259,11 @@ export function CreateDishForm() {
             Category
           </label>
           <select
-            name="itemSize"
+            name="category"
+            id="category"
             className="w-full px-4 py-2 border rounded-md shadow-sm text-secondary focus:outline-none"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={formData.category}
+            onChange={handleInputChange}
           >
             <option value="">-</option>
             <option value="Breakfast">Breakfast</option>
