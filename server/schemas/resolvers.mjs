@@ -1,5 +1,8 @@
-const { User, Dish } = require("../models");
-const { signToken, AuthenticationError } = require("../utils/auth");
+import User from "../models/user.mjs";
+import Dish from "../models/dish.mjs";
+import { signToken, AuthenticationError } from "../utils/auth.mjs";
+import { v4 as uuidv4 } from "uuid";
+import fs from "fs/promises"; // Use fs/promises for async file operations
 
 const resolvers = {
   Query: {
@@ -117,11 +120,29 @@ const resolvers = {
         throw new AuthenticationError();
       }
 
+      // Handle file upload
+      const { createReadStream, filename, mimetype, encoding } = await image;
+
+      // Create a unique filename using uuid
+      const uniqueFilename = `${uuidv4()}-${filename}`;
+
+      // Create the uploads directory if it doesn't exist
+      const uploadDir = "./uploads";
+
+      // Stream the file to the uploads directory
+      const stream = createReadStream();
+      const filePath = `${uploadDir}/${uniqueFilename}`;
+      const writeStream = fs.createWriteStream(filePath);
+      await stream.pipe(writeStream);
+
+      // Store the URL or identifier of the uploaded file in the database
+      const fileUrl = `/uploads/${uniqueFilename}`;
+
       try {
         const dish = await Dish.create({
           title,
           description,
-          image,
+          image: fileUrl,
           cookTime,
           category,
           ingredients,
@@ -172,12 +193,29 @@ const resolvers = {
           );
         }
 
+        // Handle file upload // Use the existing file URL by default
+        let fileUrl = existingDish.image || "";
+
+        if (image) {
+          const { createReadStream, filename, mimetype } = await image;
+
+          const uniqueFilename = `${uuidv4()}-${filename}`;
+          const uploadDir = "./uploads";
+          const filePath = `${uploadDir}/${uniqueFilename}`;
+
+          const stream = createReadStream();
+          const writeStream = fs.createWriteStream(filePath);
+          await stream.pipe(writeStream);
+
+          fileUrl = `/uploads/${uniqueFilename}`;
+        }
+
         const updatedDish = await Dish.findByIdAndUpdate(
           dishId,
           {
             title,
             description,
-            image,
+            image: fileUrl,
             cookTime,
             category,
             ingredients,
@@ -258,4 +296,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+export default resolvers;

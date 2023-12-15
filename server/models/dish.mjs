@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const dishSchema = new Schema(
   {
@@ -56,7 +56,7 @@ const dishSchema = new Schema(
 
 const Dish = model("Dish", dishSchema);
 
-module.exports = Dish;
+export default Dish;
 
 /* const upload = require("../utils/uploadMiddleware");
 const { handleDishImage } = require("../utils/dishMiddleware"); */
