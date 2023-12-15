@@ -171,7 +171,7 @@ export const CREATE_DISH = gql`
   mutation CreateDish(
     $title: String!
     $description: String!
-    $image: String
+    $image: Upload
     $cookTime: Int!
     $category: String!
     $ingredients: [String]!
@@ -211,7 +211,7 @@ export const UPDATE_DISH = gql`
     $dishId: ID!
     $title: String
     $description: String
-    $image: String
+    $image: Upload
     $cookTime: Int
     $category: String
     $ingredients: [String]

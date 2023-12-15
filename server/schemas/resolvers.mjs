@@ -2,7 +2,7 @@ import User from "../models/user.mjs";
 import Dish from "../models/dish.mjs";
 import { signToken, AuthenticationError } from "../utils/auth.mjs";
 import { v4 as uuidv4 } from "uuid";
-import fs from "fs/promises"; // Use fs/promises for async file operations
+import fs from "fs/promises";
 
 const resolvers = {
   Query: {
@@ -120,23 +120,27 @@ const resolvers = {
         throw new AuthenticationError();
       }
 
-      // Handle file upload
-      const { createReadStream, filename, mimetype, encoding } = await image;
+      let fileUrl = null;
 
-      // Create a unique filename using uuid
-      const uniqueFilename = `${uuidv4()}-${filename}`;
+      if (image) {
+        // Handle file upload
+        const { createReadStream, filename } = await image;
 
-      // Create the uploads directory if it doesn't exist
-      const uploadDir = "./uploads";
+        // Create a unique filename using uuid
+        const uniqueFilename = `${uuidv4()}-${filename}`;
 
-      // Stream the file to the uploads directory
-      const stream = createReadStream();
-      const filePath = `${uploadDir}/${uniqueFilename}`;
-      const writeStream = fs.createWriteStream(filePath);
-      await stream.pipe(writeStream);
+        // Create the uploads directory if it doesn't exist
+        const uploadDir = "./uploads";
 
-      // Store the URL or identifier of the uploaded file in the database
-      const fileUrl = `/uploads/${uniqueFilename}`;
+        // Stream the file to the uploads directory
+        const stream = createReadStream();
+        const filePath = `${uploadDir}/${uniqueFilename}`;
+        const writeStream = fs.createWriteStream(filePath);
+        await stream.pipe(writeStream);
+
+        // Store the URL or identifier of the uploaded file in the database
+        fileUrl = `/uploads/${uniqueFilename}`;
+      }
 
       try {
         const dish = await Dish.create({
@@ -161,6 +165,7 @@ const resolvers = {
         return dish;
       } catch (error) {
         console.error(`Error: ${error.message}`);
+        throw new Error("Failed to create dish");
       }
     },
     updateDish: async (
