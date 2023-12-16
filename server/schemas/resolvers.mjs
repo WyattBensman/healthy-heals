@@ -2,7 +2,7 @@ import User from "../models/user.mjs";
 import Dish from "../models/dish.mjs";
 import { signToken, AuthenticationError } from "../utils/auth.mjs";
 import { v4 as uuidv4 } from "uuid";
-import fs from "fs/promises";
+import fs from "fs";
 
 const resolvers = {
   Query: {
@@ -124,7 +124,7 @@ const resolvers = {
 
       if (image) {
         // Handle file upload
-        const { createReadStream, filename } = await image;
+        const { createReadStream, filename } = await image.file;
 
         // Create a unique filename using uuid
         const uniqueFilename = `${uuidv4()}-${filename}`;
