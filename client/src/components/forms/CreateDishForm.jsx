@@ -29,6 +29,7 @@ export function CreateDishForm() {
     e.preventDefault();
 
     try {
+      console.log(formData);
       const { data } = await createDish({
         variables: {
           ...formData,

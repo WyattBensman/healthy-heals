@@ -1,5 +1,3 @@
-import DefaultCard from "../components/cards/defaultCard";
-
 export default function Home() {
   return (
     <>
@@ -13,9 +11,8 @@ export default function Home() {
           <p>Oldest</p>
         </div>
       </div>
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
-        <DefaultCard />
-      </div>
+      {/* MAP THROUGH CARDS INSIDE THIS DIV */}
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4"></div>
     </>
   );
 }
