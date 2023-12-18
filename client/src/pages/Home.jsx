@@ -1,4 +1,25 @@
+import { useEffect } from "react";
+import { useQuery } from "@apollo/client";
+import { useParams } from "react-router-dom";
+import { GET_DISHES } from "../utils/queries";
+import DefaultCard from "../components/cards/defaultCard";
+
 export default function Home() {
+  const { category } = useParams();
+  console.log(category);
+  const { loading, error, data, refetch } = useQuery(GET_DISHES, {
+    variables: { category },
+  });
+
+  useEffect(() => {
+    refetch({ category });
+  }, [category, refetch]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const dishes = category ? data.dishes : data.dishes;
+
   return (
     <>
       <div className="flex md:flex-row flex-col justify-between items-center mt-12 mb-4">
@@ -11,8 +32,19 @@ export default function Home() {
           <p>Oldest</p>
         </div>
       </div>
-      {/* MAP THROUGH CARDS INSIDE THIS DIV */}
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4"></div>
+      {/* CARD GRID */}
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
+        {dishes.map((dish) => (
+          <DefaultCard
+            key={dish._id}
+            dishId={dish._id}
+            title={dish.title}
+            image={dish.image}
+            cookTime={dish.cookTime}
+            ingredientsCount={dish.ingredients.length}
+          />
+        ))}
+      </div>
     </>
   );
 }

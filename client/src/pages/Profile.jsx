@@ -1,12 +1,33 @@
 import { Link } from "react-router-dom";
+import AuthService from "../utils/auth";
 import DefaultCard from "../components/cards/defaultCard";
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "../utils/queries";
+import { useEffect } from "react";
 
 export default function Profile() {
+  const user = AuthService.getProfile();
+  const userId = user ? user.data._id : null;
+
+  const { loading, error, data, refetch } = useQuery(GET_USER, {
+    variables: { userId },
+  });
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const { fName, lName, createdDishes } = data.user;
+  console.log(fName);
+
   return (
     <>
       <div className="mt-12 mb-4">
         <h1 className="text-2xl font-semibold text-[#182d27] mb-4">
-          Hello, Wyatt Bensman
+          {`Hello, ${fName} ${lName}`}
         </h1>
         <Link to="/create-dish">
           <button className="px-8 py-2 bg-[#48b4a0] hover:opacity-80 duration-200 text-white font-medium rounded">
@@ -31,12 +52,18 @@ export default function Profile() {
           </a>
         </div>
       </div>
+      {/* MAP THROUGH USER CARDS HERE WITH DEFAULT CARD */}
       <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 mt-4">
-        <DefaultCard />
-        <DefaultCard />
-        <DefaultCard />
-        <DefaultCard />
-        <DefaultCard />
+        {createdDishes.map((dish) => (
+          <DefaultCard
+            key={dish._id}
+            dishId={dish._id}
+            title={dish.title}
+            image={dish.image}
+            cookTime={dish.cookTime}
+            ingredientsCount={dish.ingredients.length}
+          />
+        ))}
       </div>
     </>
   );

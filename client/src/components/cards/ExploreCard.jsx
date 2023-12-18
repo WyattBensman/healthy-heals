@@ -16,7 +16,7 @@ export default function ExploreCard({ category }) {
           onMouseLeave={() => setCardHover(false)}
         />
       </div>
-      <h3 className="text-center font-semibold hover:text-[#182d27] ease-in-out duration-200">
+      <h3 className="text-center font-light text-xl hover:text-[#182d27] ease-in-out duration-200">
         {category.charAt(0).toUpperCase() + category.slice(1)}
       </h3>
     </Link>

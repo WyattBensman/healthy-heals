@@ -7,6 +7,9 @@ import typeDefs from "./schemas/typeDefs.mjs";
 import resolvers from "./schemas/resolvers.mjs";
 import db from "./config/connection.mjs";
 
+import * as url from "url";
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+
 const PORT = process.env.PORT || 3001;
 const app = express();
 const server = new ApolloServer({
@@ -18,6 +21,9 @@ const server = new ApolloServer({
 
 // Apply the middleware to handle file uploads
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+
+// Serve uploaded images
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 const startServer = async () => {
   await server.start();

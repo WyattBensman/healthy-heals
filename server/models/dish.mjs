@@ -6,7 +6,7 @@ const dishSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-      maxlength: 30,
+      maxlength: 120,
     },
     description: {
       type: String,
