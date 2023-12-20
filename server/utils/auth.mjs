@@ -34,8 +34,24 @@ const authMiddleware = function ({ req }) {
 };
 
 // Function for creating and signing a token
-const signToken = function ({ email, username, _id }) {
-  const payload = { email, username, _id };
+const signToken = function ({
+  _id,
+  email,
+  username,
+  fName,
+  lName,
+  createdDishes,
+  savedDishes,
+}) {
+  const payload = {
+    _id,
+    email,
+    username,
+    fName,
+    lName,
+    createdDishes,
+    savedDishes,
+  };
   return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
 };
 

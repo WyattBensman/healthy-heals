@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthService from "../../utils/auth";
-import { useMutation } from "@apollo/client";
+import SettingsDropdown from "./SettingsDropdown";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_USER } from "../../utils/queries";
 import { SAVE_DISH, UNSAVE_DISH } from "../../utils/mutations";
 
 export default function DefaultCard({
@@ -9,30 +11,48 @@ export default function DefaultCard({
   title,
   image,
   cookTime,
-  ingredientsCount,
+  ingredients,
+  author,
+  refetchDishes,
 }) {
   const [cardHover, setCardHover] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const user = AuthService.getProfile();
-  const userId = user ? user.data._id : null;
+  const [isCurrentUserAuthor, setIsCurrentUserAuthor] = useState(false);
 
-  // Mutation hooks
+  // GraphQL mutations
   const [saveDishMutation] = useMutation(SAVE_DISH);
   const [unsaveDishMutation] = useMutation(UNSAVE_DISH);
 
-  useEffect(() => {
-    if (user.data.savedDishes) {
-      // Set initial save status based on user's savedDishes
-      setIsSaved(user.data.savedDishes.includes(dishId));
-    }
-  }, [user, dishId]);
+  // CHECK IF CURRENT USER OF CARD
+  const currentUser = AuthService.getProfile();
+  const currentUserId = currentUser?.data?._id;
+
+  const { data } = useQuery(GET_USER, {
+    variables: { userId: currentUserId },
+    onCompleted: (data) => {
+      // Callback once Query is Completed
+      const savedDishIds =
+        data?.user?.savedDishes.map((savedDish) => savedDish._id) || [];
+
+      if (currentUserId === author._id) {
+        setIsCurrentUserAuthor(true);
+      }
+
+      if (savedDishIds.includes(dishId)) {
+        setIsSaved(true);
+      }
+    },
+  });
 
   const handleSaveDish = async () => {
     try {
-      await saveDishMutation({ variables: { dishId } });
+      const result = await saveDishMutation({ variables: { dishId } });
+      console.log("saveDishMutation result:", result);
       setIsSaved(true);
+      refetchDishes();
     } catch (error) {
       console.error("Error saving dish:", error.message);
+      console.error("Detailed error:", error);
     }
   };
 
@@ -40,6 +60,8 @@ export default function DefaultCard({
     try {
       await unsaveDishMutation({ variables: { dishId } });
       setIsSaved(false);
+
+      console.log("Unsaved Brother");
     } catch (error) {
       console.error("Error unsaving dish:", error.message);
     }
@@ -58,10 +80,9 @@ export default function DefaultCard({
           onMouseOver={() => setCardHover(true)}
           onMouseLeave={() => setCardHover(false)}
         />
-        {/* FIX THIS */}
         {cardHover && (
           <Link
-            to={`/dishes/${dishId}`}
+            to={`/dish/${dishId}`}
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white hover:text-gray-200 duration-200 text-xl font-bold bg-black bg-opacity-75 p-4 rounded"
             onMouseOver={() => setCardHover(true)}
           >
@@ -77,7 +98,12 @@ export default function DefaultCard({
           {/* TITLE */}
           <h3 className="font-medium">{title}</h3>
         </Link>
-        {isSaved ? (
+
+        {isCurrentUserAuthor ? (
+          <div className="relative group">
+            <SettingsDropdown />
+          </div>
+        ) : isSaved ? (
           <i
             className="fa-solid fa-heart text-xl text-red-400"
             onClick={handleUnsaveDish}
@@ -89,25 +115,13 @@ export default function DefaultCard({
           ></i>
         )}
       </div>
+
       {/* COOK TIME */}
       <p className="text-sm italic">{cookTime} Minute Cook Time</p>
       {/* # OF INGREDIENTS  */}
-      <p className="text-sm italic">{ingredientsCount} Ingredients</p>
+      <p className="text-sm italic">
+        {ingredients ? ingredients.length : "N/A"} Ingredients
+      </p>
     </div>
   );
-}
-
-/* const currentUser = AuthService.getProfile();
- */ /* const isCurrentUserAuthor = currentUser && currentUser.id === card.authorId; */
-
-{
-  /* {isCurrentUserAuthor && currentUser && (
-          <div className="relative group">
-            <i className="fa-regular fa-pen-to-square text-xl text-gray-400 cursor-pointer" />
-            <div className="hidden group-hover:block absolute right-0 mt-2 bg-white border p-2 rounded">
-              <button>Edit</button>
-              <button>Delete</button>
-            </div>
-          </div>
-        )} */
 }

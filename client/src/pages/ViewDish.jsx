@@ -1,4 +1,27 @@
+import { useQuery } from "@apollo/client";
+import { useParams } from "react-router-dom";
+import { GET_DISH } from "../utils/queries";
+
 export default function ViewDish() {
+  const { dishId } = useParams();
+  const { loading, error, data } = useQuery(GET_DISH, {
+    variables: { dishId },
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const {
+    title,
+    description,
+    image,
+    cookTime,
+    category,
+    ingredients,
+    instructions,
+  } = data;
+  console.log(title);
+
   return (
     <div className="mt-12">
       <div className="flex gap-8">

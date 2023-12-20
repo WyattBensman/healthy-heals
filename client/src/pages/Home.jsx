@@ -6,7 +6,6 @@ import DefaultCard from "../components/cards/defaultCard";
 
 export default function Home() {
   const { category } = useParams();
-  console.log(category);
   const { loading, error, data, refetch } = useQuery(GET_DISHES, {
     variables: { category },
   });
@@ -41,7 +40,9 @@ export default function Home() {
             title={dish.title}
             image={dish.image}
             cookTime={dish.cookTime}
-            ingredientsCount={dish.ingredients.length}
+            ingredients={dish.ingredients}
+            author={dish.author}
+            refetchDishes={refetch}
           />
         ))}
       </div>

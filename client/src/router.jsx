@@ -40,7 +40,11 @@ const routes = [
         element: <Profile />,
       },
       {
-        path: ":dish",
+        path: "/profile/saved-dishes",
+        element: <Profile />,
+      },
+      {
+        path: "/dish/:dish",
         element: <ViewDish />,
       },
       {
