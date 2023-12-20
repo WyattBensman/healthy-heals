@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import AuthService from "../../utils/auth";
 import SettingsDropdown from "./SettingsDropdown";
@@ -92,7 +92,7 @@ export default function DefaultCard({
       </div>
       <div className="flex justify-between items-center">
         <Link
-          to={`/dishes/${dishId}`}
+          to={`/dish/${dishId}`}
           className="hover:text-[#182d27] ease-in-out duration-100"
         >
           {/* TITLE */}
