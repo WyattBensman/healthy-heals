@@ -172,7 +172,7 @@ export const CREATE_DISH = gql`
     $title: String!
     $description: String!
     $image: Upload
-    $cookTime: Int!
+    $cookTime: String!
     $category: String!
     $ingredients: [String]!
     $instructions: [String]!
@@ -212,7 +212,7 @@ export const UPDATE_DISH = gql`
     $title: String
     $description: String
     $image: Upload
-    $cookTime: Int
+    $cookTime: String
     $category: String
     $ingredients: [String]
     $instructions: [String]

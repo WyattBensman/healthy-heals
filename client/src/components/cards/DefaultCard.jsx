@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthService from "../../utils/auth";
 import SettingsDropdown from "./SettingsDropdown";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_USER } from "../../utils/queries";
-import { SAVE_DISH, UNSAVE_DISH } from "../../utils/mutations";
+import { SAVE_DISH, UNSAVE_DISH, DELETE_DISH } from "../../utils/mutations";
 
 export default function DefaultCard({
   dishId,
@@ -22,6 +22,10 @@ export default function DefaultCard({
   // GraphQL mutations
   const [saveDishMutation] = useMutation(SAVE_DISH);
   const [unsaveDishMutation] = useMutation(UNSAVE_DISH);
+  const [deleteDishMutation] = useMutation(DELETE_DISH);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // CHECK IF CURRENT USER OF CARD
   const currentUser = AuthService.getProfile();
@@ -30,7 +34,6 @@ export default function DefaultCard({
   const { data } = useQuery(GET_USER, {
     variables: { userId: currentUserId },
     onCompleted: (data) => {
-      // Callback once Query is Completed
       const savedDishIds =
         data?.user?.savedDishes.map((savedDish) => savedDish._id) || [];
 
@@ -46,8 +49,14 @@ export default function DefaultCard({
 
   const handleSaveDish = async () => {
     try {
+      const isLoggedIn = AuthService.loggedIn();
+
+      if (!isLoggedIn) {
+        navigate("/login");
+        return;
+      }
+
       const result = await saveDishMutation({ variables: { dishId } });
-      console.log("saveDishMutation result:", result);
       setIsSaved(true);
       refetchDishes();
     } catch (error) {
@@ -60,10 +69,35 @@ export default function DefaultCard({
     try {
       await unsaveDishMutation({ variables: { dishId } });
       setIsSaved(false);
-
-      console.log("Unsaved Brother");
+      refetchDishes();
     } catch (error) {
       console.error("Error unsaving dish:", error.message);
+    }
+  };
+
+  const handleDeleteDish = async () => {
+    try {
+      console.log(dishId);
+      await deleteDishMutation({ variables: { dishId } });
+
+      const source =
+        location.pathname === "/"
+          ? "home"
+          : location.pathname === "/profile"
+          ? "profile"
+          : "dishView";
+
+      if (source === "home") {
+        navigate("/");
+      } else if (source === "profile") {
+        navigate("/profile");
+      } else {
+        navigate(-1);
+      }
+
+      refetchDishes();
+    } catch (error) {
+      console.error("Error deleting dish:", error.message);
     }
   };
 
@@ -101,7 +135,10 @@ export default function DefaultCard({
 
         {isCurrentUserAuthor ? (
           <div className="relative group">
-            <SettingsDropdown />
+            <SettingsDropdown
+              dishId={dishId}
+              handleDeleteDish={handleDeleteDish}
+            />
           </div>
         ) : isSaved ? (
           <i

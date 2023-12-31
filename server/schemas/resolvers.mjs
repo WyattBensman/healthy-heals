@@ -116,9 +116,9 @@ const resolvers = {
       },
       req
     ) => {
-      if (!req.user) {
+      /* if (!req.user) {
         throw new AuthenticationError();
-      }
+      } */
 
       let fileUrl = null;
 
@@ -151,11 +151,11 @@ const resolvers = {
           category,
           ingredients,
           instructions,
-          author: req.user._id,
+          author: "658079a7afc15c19054b1607",
         });
 
         await User.findByIdAndUpdate(
-          req.user._id,
+          "658079a7afc15c19054b1607",
           {
             $addToSet: { createdDishes: dish },
           },
@@ -192,26 +192,33 @@ const resolvers = {
           author: req.user._id,
         });
 
+        console.log(`Backend ${existingDish}`);
+
         if (!existingDish) {
           throw new Error(
             "Dish not found or you do not have permission to edit this dish"
           );
         }
 
-        // Handle file upload // Use the existing file URL by default
-        let fileUrl = existingDish.image || "";
+        let fileUrl = existingDish.image;
 
         if (image) {
-          const { createReadStream, filename, mimetype } = await image;
+          // Handle file upload
+          const { createReadStream, filename } = await image.file;
 
+          // Create a unique filename using uuid
           const uniqueFilename = `${uuidv4()}-${filename}`;
-          const uploadDir = "./uploads";
-          const filePath = `${uploadDir}/${uniqueFilename}`;
 
+          // Create the uploads directory if it doesn't exist
+          const uploadDir = "./uploads";
+
+          // Stream the file to the uploads directory
           const stream = createReadStream();
+          const filePath = `${uploadDir}/${uniqueFilename}`;
           const writeStream = fs.createWriteStream(filePath);
           await stream.pipe(writeStream);
 
+          // Store the URL or identifier of the uploaded file in the database
           fileUrl = `/uploads/${uniqueFilename}`;
         }
 
@@ -235,14 +242,16 @@ const resolvers = {
       }
     },
     deleteDish: async (_, { dishId }, req) => {
-      /* if (!req.user) {
+      if (!req.user) {
         throw new AuthenticationError();
-      } */
+      }
+
+      console.log(req.user);
 
       try {
         const existingDish = await Dish.findOneAndDelete({
           _id: dishId,
-          author: "658079a7afc15c19054b1607",
+          author: req.user._id,
         });
 
         if (!existingDish) {
@@ -252,7 +261,7 @@ const resolvers = {
         }
 
         const updatedUser = await User.findByIdAndUpdate(
-          "658079a7afc15c19054b1607",
+          req.user._id,
           {
             $pull: { createdDishes: dishId },
           },

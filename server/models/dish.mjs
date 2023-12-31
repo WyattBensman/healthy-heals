@@ -16,7 +16,7 @@ const dishSchema = new Schema(
     },
     image: { type: String },
     cookTime: {
-      type: Number,
+      type: String,
       required: true,
       trim: true,
     },

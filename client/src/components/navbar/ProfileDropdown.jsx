@@ -13,7 +13,7 @@ export default function ProfileNavDropdown() {
     <div
       onMouseOver={() => setDropdownVisible(true)}
       onMouseLeave={() => setDropdownVisible(false)}
-      className="relative"
+      className="relative md:mt-0 mt-3"
     >
       <button
         className="text-[#182d27] bg-[#48b4a0] font-medium focus:ring-4 focus:outline-none focus:ring-[#48b4a0] rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"

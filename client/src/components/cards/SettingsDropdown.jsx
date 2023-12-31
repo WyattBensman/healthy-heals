@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import AuthService from "../../utils/auth";
 
-export default function SettingsDropdown() {
+export default function SettingsDropdown({ handleDeleteDish, dishId }) {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-
-  const handleLogout = () => {
-    AuthService.logout();
-  };
 
   return (
     <div
@@ -22,7 +17,7 @@ export default function SettingsDropdown() {
           <ul className="py-2 text-sm text-[#182d27] dark:text-gray-200 text-center">
             <li>
               <NavLink
-                to="/create-dish"
+                to={`/${dishId}/edit-dish`}
                 className="block px-4 py-2 hover:text-[#48b4a0] ease-in-out duration-100"
               >
                 Edit Dish
@@ -30,7 +25,7 @@ export default function SettingsDropdown() {
             </li>
             <li>
               <div
-                onClick={handleLogout}
+                onClick={handleDeleteDish}
                 className="block cursor-pointer px-4 py-2 hover:text-red-600 ease-in-out duration-100"
               >
                 Delete Dish

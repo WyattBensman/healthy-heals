@@ -15,7 +15,7 @@ export function CreateDishForm() {
     category: "",
   });
 
-  const [createDish] = useMutation(CREATE_DISH);
+  const [createDishMutation] = useMutation(CREATE_DISH);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,8 +29,7 @@ export function CreateDishForm() {
     e.preventDefault();
 
     try {
-      console.log(formData);
-      const { data } = await createDish({
+      const { data } = await createDishMutation({
         variables: {
           ...formData,
           ingredients: formData.ingredients.map(
@@ -43,7 +42,7 @@ export function CreateDishForm() {
       });
 
       const createdDishId = data.createDish._id;
-      navigate(`/${createdDishId}`);
+      navigate(`/dish/${createdDishId}`);
     } catch (error) {
       console.error(error);
     }

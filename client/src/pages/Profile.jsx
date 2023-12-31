@@ -75,6 +75,7 @@ export default function Profile() {
               cookTime={dish.cookTime}
               ingredients={dish.ingredients}
               author={dish.author}
+              refetchDishes={refetch}
             />
           ))}
 
@@ -87,8 +88,9 @@ export default function Profile() {
               title={dish.title}
               image={dish.image}
               cookTime={dish.cookTime}
-              ingredientsCount={dish.ingredients.length}
+              ingredients={dish.ingredients}
               author={dish.author}
+              refetchDishes={refetch}
             />
           ))}
       </div>
