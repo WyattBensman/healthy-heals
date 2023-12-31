@@ -151,11 +151,11 @@ const resolvers = {
           category,
           ingredients,
           instructions,
-          author: "658079a7afc15c19054b1607",
+          author: req.user._id,
         });
 
         await User.findByIdAndUpdate(
-          "658079a7afc15c19054b1607",
+          req.user._id,
           {
             $addToSet: { createdDishes: dish },
           },
