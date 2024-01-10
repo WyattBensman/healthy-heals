@@ -1,4 +1,4 @@
-import { CreateDishForm } from "../components/forms/createDishForm";
+import { CreateDishForm } from "../components/forms/CreateDishForm";
 
 export default function CreateDish() {
   return (

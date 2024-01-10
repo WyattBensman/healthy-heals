@@ -1,4 +1,4 @@
-import { EditDishForm } from "../components/forms/editDishForm";
+import { EditDishForm } from "../components/forms/EditDishForm";
 
 export default function EditDish() {
   return (
