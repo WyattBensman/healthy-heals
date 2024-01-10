@@ -1,5 +1,8 @@
 {
   "name": "healthy-heals",
+  "engines": {
+    "node": "20.x"
+  },
   "version": "1.0.0",
   "description": "",
   "main": "server/server.mjs",
