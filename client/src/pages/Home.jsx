@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { GET_DISHES } from "../utils/queries";
-import DefaultCard from "../components/cards/defaultCard";
+import DefaultCard from "../components/cards/DefaultCard";
 
 export default function Home() {
   const { category } = useParams();

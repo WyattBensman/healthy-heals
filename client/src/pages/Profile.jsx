@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import AuthService from "../utils/auth";
-import DefaultCard from "../components/cards/defaultCard";
+import DefaultCard from "../components/cards/DefaultCard";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../utils/queries";
 import { useEffect } from "react";

@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import ExploreCard from "../components/cards/exploreCard";
+import ExploreCard from "../components/cards/ExploreCard";
 
 export default function Explore() {
   const isHomeRoute = window.location.pathname === "/explore";
