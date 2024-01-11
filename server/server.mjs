@@ -6,6 +6,9 @@ import { authMiddleware } from "./utils/auth.mjs";
 import typeDefs from "./schemas/typeDefs.mjs";
 import resolvers from "./schemas/resolvers.mjs";
 import db from "./config/connection.mjs";
+import dotenv from "dotenv";
+
+dotenv.config(); // Load environment variables from .env file
 
 import * as url from "url";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
@@ -36,13 +39,13 @@ const startServer = async () => {
   });
 
   // Serve static files in production
-  if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../client/dist")));
+  /* if (process.env.NODE_ENV === "production") { */
+  app.use(express.static(path.join(__dirname, "../client/dist")));
 
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(__dirname, "../client/dist/index.html"));
-    });
-  }
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  });
+  /*   } */
 
   // Connect to MongoDB
   await db;

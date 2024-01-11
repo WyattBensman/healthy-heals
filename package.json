@@ -7,7 +7,7 @@
   "description": "",
   "main": "server/server.mjs",
   "scripts": {
-    "start": "node --experimental-modules server/server.mjs",
+    "start": "node server/server.mjs",
     "develop": "concurrently \"cd server && npm run start\" \"cd client && npm run dev\"",
     "install": "cd server && npm i && cd ../client && npm i",
     "seed": "cd server && npm run seed",
@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "concurrently": "^8.2.2",
+    "dotenv": "^16.3.1",
     "mongodb": "^6.3.0"
   }
 }
